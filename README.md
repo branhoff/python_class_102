@@ -4,7 +4,7 @@ This project is a follow up to the python_class_101 course. It has a similar str
 
 Consists of two basic components:
 * Jupyter Notebooks outlining essential concepts in programming. These are stored in the "01-lesson_notebooks" directory.
-* _INPROGRESS -- EXERCISES ARE NOT YET AVAILABLE_ -> corresponding larger project exercise, intended to be built in an IDE (program assumes VS Code), is also included in the IDE_excecises folder. These are stored in the "IDE_exercises" directory.
+* Corresponding larger project exercises, intended to be built in an IDE (program assumes VS Code), is also included in the IDE_excecises folder. These are stored in the "IDE_exercises" directory.
 
 ## How to use the materials
 Lesson notebooks are arranged by topic. Each notebook contains explanations and examples of the programming principles concept for that section. Basic exercies and solutions are also included and can be practiced in the notebook directly
