@@ -1,4 +1,4 @@
-# project-1
+# project-01
 
 For this project, you will import the **statistics** module.
 
