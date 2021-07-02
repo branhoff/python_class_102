@@ -360,7 +360,7 @@ class JanggiGame:
                     i += 1
 
                 # if a piece is in the path, stops loop, direction is valid
-                elif new_pos_piece[0] != self.get_opponent():
+                elif new_pos_piece[0] == self.get_opponent():
                     valid_directions.append((x * i, y * i))
                     break
 
@@ -373,7 +373,7 @@ class JanggiGame:
 
 
         # add all possible moves to poss_moves_index
-        self.save_moves(poss_directions)
+        self.save_moves(valid_directions)
         return self._poss_moves_index
 
 

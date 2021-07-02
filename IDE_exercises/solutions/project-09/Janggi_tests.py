@@ -148,6 +148,9 @@ class TestingJanggi(unittest.TestCase):
         game.get_board()
         game.make_move("a10", "a5")
         game.get_board()
+        game.make_move("c1", "c1")  # RED pass
+        game.make_move("a5", "i5")
+        game.get_board()
 
 
 if __name__ == "__main__":
