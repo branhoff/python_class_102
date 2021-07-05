@@ -1,5 +1,6 @@
 
 
+
 class Board:
     """
     Represents board and stores instances of piece classes for every player
@@ -14,16 +15,16 @@ class Board:
         self._num_col = 9
         self._general_positions = {"RED": (1, 4) , "BLUE": (8, 4)}
         
-        self._board = [[Chariot("RED"), Elephant("RED"), Horse("RED"), Guard("RED"), "", Guard("RED"), Elephant("RED"), Horse("RED"), Chariot("RED")],
-                       ["", "", "", "", General("RED"), "", "", "", ""],
-                       ["", Cannon("RED"), "", "", "", "", "", Cannon("RED"), ""],
-                       [Soldier("RED"), "", Soldier("RED"), "", Soldier("RED"), "", Soldier("RED"), "", Soldier("RED")],
-                       ["", "", "", "", "", "", "", "", ""],
-                       ["", "", "", "", "", "", "", "", ""],
-                       [Soldier("BLUE"), "", Soldier("BLUE"), "", Soldier("BLUE"), "", Soldier("BLUE"), "", Soldier("BLUE")],
-                       ["", Cannon("BLUE"), "", "", "", "", "", Cannon("BLUE"), ""],
-                       ["", "", "", "", General("BLUE"), "", "", "", ""],
-                       [Chariot("BLUE"), Elephant("BLUE"), Horse("BLUE"), Guard("BLUE"), "", Guard("BLUE"), Elephant("BLUE"), Horse("BLUE"), Chariot("BLUE")]]
+        self._board = [["A01", "B01", "C01", "D01", "E01", "F01", "G01", "H01", "I01"],
+                       ["A02", "B02", "C02", "D02", "E02", "F02", "G02", "H02", "I02"],
+                       ["A03", "B03", "C03", "D03", "E03", "F03", "G03", "H03", "I03"],
+                       ["A04", "B04", "C04", "D04", "E04", "F04", "G04", "H04", "I04"],
+                       ["A05", "B05", "C05", "D05", "E05", "F05", "G05", "H05", "I05"],
+                       ["A06", "B06", "C06", "D06", "E06", "F06", "G06", "H06", "I06"],
+                       ["A07", "B07", "C07", "D07", "E07", "F07", "G07", "H07", "I07"],
+                       ["A08", "B08", "C08", "D08", "E08", "F08", "G08", "H08", "I08"],
+                       ["A09", "B09", "C09", "D09", "E09", "F09", "G09", "H09", "I09"],
+                       ["A10", "B10", "C10", "D10", "E10", "F10", "G10", "H10", "I10"],]
 
         self._palace =  {"RED":  [(0, 3), (0, 4), (0, 5),
                                   (1, 3), (1, 4), (1, 5),
@@ -69,7 +70,17 @@ class Board:
         """
         self._general_positions[color] = coords
 
-    def set_board(self, from_idx, to_idx):
+    def set_board(self, new_board):
+        """
+
+        Args:
+            new_board is a matrix with gamepiece objects at the desired locations
+        Returns:
+            ...
+        """
+        self._board = new_board
+
+    def move_piece(self, from_idx, to_idx):
         """
         from_idx: tuple with (x,y) coordinates
         to_idx: tuple with (x,y) coordinates
@@ -85,7 +96,7 @@ class Board:
         
             self._board[x_to][y_to] = piece
             self._board[x_from][y_from] = ""
-            if piece.get_piece_type() == "General":
+            if piece.get_piece_name() == "General":
                 self.set_general_coord(piece.get_color(), (x_to, y_to))
         
             return True

@@ -1,4 +1,4 @@
-
+import board
 
 class GamePiece:
     """
@@ -35,7 +35,7 @@ class GamePiece:
         """
         return self._color
 
-    def get_piece_type(self):
+    def get_piece_name(self):
         """
         returns private piece_type variable
         """
@@ -57,12 +57,12 @@ class General(GamePiece):
                        (0, -1), (0, 0), (0, 1), 
                        (1, 1), (1, 0), (1, -1), ]
 
-    def is_legal_move(self, x_from, y_from, x_to, y_to, board):
+    def is_legal_move(self, x_from, y_from, x_to, y_to, game_board):
         """
         checks that General piece can make attempted move
         returns True if legal, False otherwise
         """
-        if (x_to, y_to) in Board().get_palace(self.get_color()):
+        if (x_to, y_to) in board.Board().get_palace(self.get_color()):
             diff = (x_to - x_from, y_to - y_from)
             return diff in self._moves
         else:
@@ -83,12 +83,12 @@ class Guard(GamePiece):
                        (1, 1), (1, 0), (1, -1)]
 
 
-    def is_legal_move(self, x_from, y_from, x_to, y_to, board):
+    def is_legal_move(self, x_from, y_from, x_to, y_to, game_board):
         """
         checks that Guard piece can make attempted move
         returns True if legal, False otherwise
         """
-        if (x_to, y_to) in Board().get_palace(self.get_color()):
+        if (x_to, y_to) in board.Board().get_palace(self.get_color()):
             diff = (x_to - x_from, y_to - y_from)
             return diff in self._moves
         else:
@@ -109,7 +109,7 @@ class Horse(GamePiece):
                        (-2, 1), (0, 0), (1, -2), 
                        (1, 2), (2, -1), (2, 1)]
     
-    def is_legal_move(self, x_from, y_from, x_to, y_to, board):
+    def is_legal_move(self, x_from, y_from, x_to, y_to, game_board):
         """
         checks that Horse piece can make attempted move
         returns True if legal, False otherwise
@@ -133,7 +133,7 @@ class Elephant(GamePiece):
                        (2, 3), (3, -2), (3, 2)]
 
 
-    def is_legal_move(self, x_from, y_from, x_to, y_to, board):
+    def is_legal_move(self, x_from, y_from, x_to, y_to, game_game_board):
         """
         checks that Horse piece can make attempted move
         returns True if legal, False otherwise
@@ -152,7 +152,7 @@ class Chariot(GamePiece):
         """
         super().__init__(_color)
 
-    def is_legal_move(self, x_from, y_from, x_to, y_to, board):
+    def is_legal_move(self, x_from, y_from, x_to, y_to, game_game_game_board):
         """
         checks that Chariot piece can make attempted move
         returns True if legal, False otherwise
@@ -166,12 +166,12 @@ class Chariot(GamePiece):
         if x_from == x_to:
             col = x_from
             for row in range(y_from + y_step, y_to, y_step):
-                if board[col][row] != "":
+                if game_game_game_board[col][row] != "":
                     return False
         if y_from == y_to:
             row = y_from
             for col in range(x_from + x_step, x_to, x_step):
-                if board[col][row] != "":
+                if game_game_game_board[col][row] != "":
                     return False
         return True
     
@@ -187,7 +187,7 @@ class Cannon(GamePiece):
         super().__init__(_player_piece_color)
 
 
-    def is_legal_move(self, x_from, y_from, x_to, y_to, board):
+    def is_legal_move(self, x_from, y_from, x_to, y_to, game_board):
         """
         checks that Cannon piece can make attempted move
         returns True if legal, False otherwise
@@ -199,7 +199,7 @@ class Cannon(GamePiece):
             return False
 
         try:
-            if board[x_to][y_to].get_piece_type() == "Cannon":
+            if game_board[x_to][y_to].get_piece_name() == "Cannon":
                 return False
         except AttributeError:
             pass
@@ -208,21 +208,21 @@ class Cannon(GamePiece):
         if x_from == x_to:
             col = x_from
             for row in range(y_from + y_step, y_to, y_step):
-                if board[col][row] != "":
+                if game_board[col][row] != "":
                     piece_count += 1
                     if piece_count > 1:
                         return False
-                    if board[col][row].get_piece_type() == "Cannon":
+                    if game_board[col][row].get_piece_name() == "Cannon":
                         return False
 
         if y_from == y_to:
             row = y_from
             for col in range(x_from + x_step, x_to, x_step):
-                if board[col][row] != "":
+                if game_board[col][row] != "":
                     piece_count += 1
                     if piece_count > 1:
                         return False
-                    if board[col][row].get_piece_type() == "Cannon":
+                    if game_board[col][row].get_piece_name() == "Cannon":
                         return False
         if piece_count == 0:
             return False
@@ -244,7 +244,7 @@ class Soldier(GamePiece):
         elif self.get_color() == "RED":
             self._moves = [(1, 0), (0, -1), (0, 0), (0, 1)] # for Red
 
-    def is_legal_move(self, x_from, y_from, x_to, y_to, board):
+    def is_legal_move(self, x_from, y_from, x_to, y_to, game_board):
         """
         checks that Soldier piece can make attempted move
         returns True if legal, False otherwise

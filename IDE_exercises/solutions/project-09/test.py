@@ -3,7 +3,7 @@
 # Description: unittest for Store.py
 
 import unittest
-from JanggiGame import JanggiGame
+from janggigame import JanggiGame
 
 class JanggiGameTester(unittest.TestCase):
     """
@@ -17,6 +17,28 @@ class JanggiGameTester(unittest.TestCase):
         game = JanggiGame()
 
         self.assertEqual(game.get_player_turn(), "BLUE")
+
+    def test_get_color(self):
+        """
+        """
+        pass
+
+    def test_get_game_state(self):
+        """
+        """
+        pass
+
+    def test_soldier_moves(self):
+        """
+        """
+        game = JanggiGame()
+        piece_object = game.get_piece("A7")
+        piece_name = piece_object.get_piece_name()
+        self.assertEqual(piece_name, "Soldier")
+        piece_color = piece_object.get_color()
+        self.assertEqual(piece_color, "BLUE")
+        self.assertEqual(game.make_move("A7", "A6"), True)
+
 
 
 

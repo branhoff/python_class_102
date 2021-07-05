@@ -1,14 +1,17 @@
 # Author: Brandon Hoffman
  # Date: 3/11/2021
  # Description: Models classes necessary to create backend for Janggi Game
-from Board import Board
-
+from board import Board
+from gamepiece import Chariot, Elephant, Horse, Guard, General, Cannon, Soldier
 
 
 class JanggiGame():
     """
     Represents JangiGame to be played. Contains methods that modify game state
     """
+
+    
+
     def __init__(self):
         """
 
@@ -16,6 +19,19 @@ class JanggiGame():
         self._current_state = "UNFINISHED"
         self._player_turn = "BLUE"
         self._board = Board()
+        
+        initial_board = [[Chariot("RED"), Elephant("RED"), Horse("RED"), Guard("RED"), "", Guard("RED"), Elephant("RED"), Horse("RED"), Chariot("RED")],
+                     ["", "", "", "", General("RED"), "", "", "", ""],
+                     ["", Cannon("RED"), "", "", "", "", "", Cannon("RED"), ""],
+                     [Soldier("RED"), "", Soldier("RED"), "", Soldier("RED"), "", Soldier("RED"), "", Soldier("RED")],
+                     ["", "", "", "", "", "", "", "", ""],
+                     ["", "", "", "", "", "", "", "", ""],
+                     [Soldier("BLUE"), "", Soldier("BLUE"), "", Soldier("BLUE"), "", Soldier("BLUE"), "", Soldier("BLUE")],
+                     ["", Cannon("BLUE"), "", "", "", "", "", Cannon("BLUE"), ""],
+                     ["", "", "", "", General("BLUE"), "", "", "", ""],
+                     [Chariot("BLUE"), Elephant("BLUE"), Horse("BLUE"), Guard("BLUE"), "", Guard("BLUE"), Elephant("BLUE"), Horse("BLUE"), Chariot("BLUE")]]
+        
+        self._board.set_board(initial_board)
 
     def get_game_state(self):
         """
@@ -28,6 +44,11 @@ class JanggiGame():
         returns private _player_turn variable
         """
         return self._player_turn
+
+    def get_piece(self, alg_coord):
+        
+        x, y = self._algebraic_notation_converter(alg_coord)
+        return self._board.get_board()[x][y]
 
     def _is_valid_coordinates(self, row, col):
         """
@@ -169,7 +190,7 @@ class JanggiGame():
             if not self._is_possible(from_idx, to_idx):
                 return False
 
-            if not self._board.set_board(from_idx, to_idx):
+            if not self._board.move_piece(from_idx, to_idx):
                 return False
 
         if self.is_in_check(self._player_turn):
