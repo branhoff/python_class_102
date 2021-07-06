@@ -152,6 +152,74 @@ class TestingJanggi(unittest.TestCase):
         game.make_move("a5", "i5")
         game.get_board()
 
+    def testing_moving_cannon(self):
+        game = JanggiGame()
+        game.get_board()
+        # attempting to move Cannon from starting position, should be INVALID
+        game.make_move("b8", "b5")
+        game.make_move("a7", "b7")  # moving soldier out of the way
+        game.make_move("c1", "c1")  # RED pass
+        game.get_board()
+        # attempting to jump over an active_player piece (VERTICAL JUMP)
+        game.make_move("b8", "b5")
+        game.get_board()
+        game.make_move("c4", "c5")
+        game.get_board()
+        # attempting to jump over a Cannon, should be INVALID
+        game.make_move("b5", "b2")
+        # attempting to jump over an opponent piece (HORIZONTAL JUMP)
+        game.make_move("b5", "i5")
+        game.get_board()
+        # attempting to capture a piece (opponent chariot) with Cannon
+        game.make_move("c1", "c1")  # RED pass
+        game.make_move("i5", "i1")
+        game.get_board()
+        # attempting to jump over multiple pieces, should be INVALID
+        game.make_move("c1", "c1")  # RED pass
+        game.make_move("i1", "e1")
+
+    def testing_moving_guard(self):
+        game = JanggiGame()
+        game.get_board()
+        # testing forward move
+        game.make_move("d10", "d9")
+        game.get_board()
+        game.make_move("c1", "c1")  # RED pass
+        # testing diagonal move from illegal spot
+        game.make_move("d9", "e8")
+        game.get_board()
+        game.make_move("e9", "e10")     # moving General out of the way for testing purposes
+        game.make_move("c1", "c1")  # RED pass
+        game.get_board()
+        # testing valid diagonal move
+        game.make_move("f10", "e9")
+        game.get_board()
+        game.make_move("c1", "c1")  # RED pass
+        game.make_move("e9", "d8")
+        game.get_board()
+        # attempting to move out of the palace
+        game.make_move("c1", "c1")  # RED pass
+        game.make_move("d8", "d7")
+
+    def testing_moving_general(self):
+        game = JanggiGame()
+        game.get_board()
+        # testing diagonal movement in the palace
+        game.make_move("e9", "d8")
+        game.get_board()
+        game.make_move("c1", "c1")  # RED pass
+        # attempting to move out of the palace, should be INVALID
+        game.make_move("d8", "d7")
+        # testing vertical movement
+        game.make_move("d8", "d9")
+        game.get_board()
+        game.make_move("c1", "c1")  # RED pass
+        # testing INVALID diagonal movement
+        game.make_move("d9", "e8")
+        # testing horizontal movement
+        game.make_move("d9", "e9")
+        game.get_board()
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,5 +1,6 @@
 import copy
 
+
 class JanggiGame:
     """
     The JanggiGame class initializes all data members, facilitates the rules of the game, facilitates moving the
@@ -17,6 +18,11 @@ class JanggiGame:
         self._new_pos_index = []
         self._poss_moves_index = []
         self._taken_pieces = ["--"]
+
+        self._check = False
+        self._checkmate = False
+        self._threat_piece = None
+        self._threat_piece_index = []
 
         self._board_key = [
             ["a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1", "i1"],
@@ -65,7 +71,7 @@ class JanggiGame:
         print("This is the board key")
         for x in self._board_key:
             for i in range(0, 9):
-                print(x[i], end = " ")
+                print(x[i], end=" ")
             print()
 
     def get_board(self):
@@ -75,7 +81,7 @@ class JanggiGame:
         print("This is the Janggi board:")
         for x in self._filled_board:
             for i in range(0, 9):
-                print(x[i], end = "  ")
+                print(x[i], end="  ")
             print()
 
     def get_game_state(self):
@@ -117,8 +123,6 @@ class JanggiGame:
         """
         return self._filled_board[row][col]
 
-
-
     def make_move(self, curr_pos, new_pos):
         """
         Function for moving the pieces on the board
@@ -158,7 +162,7 @@ class JanggiGame:
 
             # if the player tries to place a piece on top of another piece
             # COME BACK TO THIS for TAKING PIECES
-            if new_pos_piece != "--" and new_pos_piece[0] == self.get_opponent():
+            if new_pos_piece != "--" and new_pos_piece[0] != self.get_opponent():
                 print("ERROR! Cannot place a piece on top of another piece")
                 return False
 
@@ -202,14 +206,11 @@ class JanggiGame:
         if piece_indicator == "c":
             self.chariot_moves()
             return self._poss_moves_index
-        if piece_indicator == "g":
-            self.guard_moves()
-            return self._poss_moves_index
         if piece_indicator == "C":
             self.cannon_moves()
             return self._poss_moves_index
-        if piece_indicator == "G":
-            self.general_moves()
+        if piece_indicator == "g" or "G":
+            self.general_and_guard_moves()
             return self._poss_moves_index
 
     def save_moves(self, poss_directions):
@@ -217,8 +218,8 @@ class JanggiGame:
         Saves all possible moves for each piece's indiv move functions.
         Also saves captured pieces.
         """
-        row = self._curr_pos_index[0]           # first value represents row
-        col = self._curr_pos_index[1]           # second value represents column
+        row = self._curr_pos_index[0]  # first value represents row
+        col = self._curr_pos_index[1]  # second value represents column
 
         for (x, y) in poss_directions:
             if self.check_range(row + x, col + y):
@@ -249,22 +250,22 @@ class JanggiGame:
         """
         Returns all possible moves for Soldier pieces
         """
-        row = self._curr_pos_index[0]          # first value represents row
-        col = self._curr_pos_index[1]          # second value represents column
+        row = self._curr_pos_index[0]  # first value represents row
+        col = self._curr_pos_index[1]  # second value represents column
 
         if self.get_active_player() == "b":
-            poss_directions = [(0, -1), (-1, 0), (0, 1)]         # LEFT, UP, RIGHT
+            poss_directions = [(0, -1), (-1, 0), (0, 1)]  # LEFT, UP, RIGHT
         else:
-            poss_directions = [(0, -1), (1, 0), (0, 1)]          # RIGHT, UP, LEFT (POV RED)
+            poss_directions = [(0, -1), (1, 0), (0, 1)]  # RIGHT, UP, LEFT (POV RED)
 
         # more possibilities if in palace (can move diagonally)
         diag_positions = [(0, 3), (2, 3), (7, 3), (9, 3), (1, 4), (8, 4), (0, 5), (2, 5), (7, 5), (9, 5)]
         poss_diag_directions = []
         if (row, col) in diag_positions:
             if self.get_active_player() == "b":
-                poss_diag_directions = [(-1, -1), (-1, 1)]       # can move diagonally forward in palace
+                poss_diag_directions = [(-1, -1), (-1, 1)]  # can move diagonally forward in palace
             else:
-                poss_diag_directions = [(1, -1), (1, 1)]         # can move diagonally forward in palace (POV RED)
+                poss_diag_directions = [(1, -1), (1, 1)]  # can move diagonally forward in palace (POV RED)
 
         # add all possible moves to poss_moves_index
         self.save_moves(poss_directions + poss_diag_directions)
@@ -277,7 +278,7 @@ class JanggiGame:
         row = self._curr_pos_index[0]  # first value represents row
         col = self._curr_pos_index[1]  # second value represents column
 
-        poss_paths = [(-1, 0), (1, 0), (0, -1), (0, 1)]                 # UP, DOWN, LEFT, RIGHT (POV BLUE)
+        poss_paths = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # UP, DOWN, LEFT, RIGHT (POV BLUE)
         poss_directions = [(2, 1), (2, -1), (-2, 1), (-2, -1), (1, 2), (1, -2), (-1, 2), (-1, -2)]
 
         # remove directions blocked by a piece
@@ -304,7 +305,7 @@ class JanggiGame:
         row = self._curr_pos_index[0]  # first value represents row
         col = self._curr_pos_index[1]  # second value represents column
 
-        poss_paths1 = [(-1, 0), (1, 0), (0, -1), (0, 1)]                 # UP, DOWN, LEFT, RIGHT (POV BLUE)
+        poss_paths1 = [(-1, 0), (1, 0), (0, -1), (0, 1)]            # UP, DOWN, LEFT, RIGHT (POV BLUE)
         poss_paths2 = [(2, -1), (2, 1), (-2, -1), (-2, 1), (1, -2), (1, 2), (-1, -2), (-1, 2)]
         poss_directions = [(3, -2), (3, 2), (-3, -2), (-3, 2), (2, -3), (2, 3), (-2, -3), (-2, 3)]
 
@@ -368,24 +369,181 @@ class JanggiGame:
                 else:
                     break
 
-                # if in palace, add more for diagonal movements
+        # if in palace, add more for diagonal movements
+        diag_positions = [(0, 3), (2, 3), (7, 3), (9, 3), (0, 5), (2, 5), (7, 5), (9, 5)]
+        poss_diag_directions = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
 
+        # if in palace and move entered is diagonal
+        if (row, col) in diag_positions:
 
+            for (x, y) in poss_diag_directions:
+                i = 1
+
+                # new_pos space must still be in the palace
+                while (row + (x * i), col + (y * i)) in diag_positions:
+                    new_pos_piece = self.get_piece(row + (x * i), col + (y * i))
+
+                    # valid if new_pos space is empty
+                    if new_pos_piece == "--":
+                        valid_directions.append((x * i, y * i))
+                        i += 1
+
+                    # valid if new_pos space has opponent piece
+                    elif new_pos_piece[0] == self.get_opponent():
+                        valid_directions.append((x * i, y * i))
+                        break
+
+                    # invalid if new_pos space has active player's piece
+                    else:
+                        break
 
         # add all possible moves to poss_moves_index
         self.save_moves(valid_directions)
         return self._poss_moves_index
 
-
-
-    def guard_moves(self):
-        pass
-
     def cannon_moves(self):
+        """
+        Returns all possible moves for Cannon pieces
+        """
+        row = self._curr_pos_index[0]  # first value represents row
+        col = self._curr_pos_index[1]  # second value represents column
+
+        poss_directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # UP, DOWN, LEFT, RIGHT (POV BLUE)
+        valid_directions = []
+
+        for (x, y) in poss_directions:
+            i = 1
+            jumpover_piece = None
+
+            while self.check_range(row + (x * i), col + (y * i)):
+                space_occupant = self.get_piece(row + (x * i), col + (y * i))
+
+                # if cannon has not jumped yet
+                if jumpover_piece is None:
+                    # if space not occupied by piece, valid and continue loop
+                    if space_occupant == "--":
+                        i += 1
+                    # if space occupied by non-Cannon piece, valid, save piece and continue
+                    elif space_occupant[1] != "C":
+                        jumpover_piece = space_occupant
+                        i += 1
+                    # if space occupied by Cannon piece, invalid, stop loop
+                    else:
+                        break
+
+                # if cannon already jumped over 1 piece
+                else:
+                    # if space is not occupied, valid and continue loop
+                    if space_occupant == "--":
+                        valid_directions.append((x * i, y * i))
+                        i += 1
+                    # if space occupied by opponent piece, valid, add direction and stop
+                    elif space_occupant[0] == self.get_opponent() and space_occupant[1] != "C":
+                        valid_directions.append((x * i, y * i))
+                        break
+                    # if space occupied by Cannon or own piece, invalid, stop loop
+                    else:
+                        break
+
+        # if cannon on palace corners, can move diagonally
+        diag_positions = [(0, 3), (2, 3), (7, 3), (9, 3), (0, 5), (2, 5), (7, 5), (9, 5)]
+        poss_diag_directions = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
+
+        # if in palace and move entered is diagonal
+        if (row, col) in diag_positions:
+
+            for (x, y) in poss_diag_directions:
+                # the move must keep the piece within the palace
+                if (row + (x * 2), col + (y * 2)) in diag_positions:
+                    jumpover_piece = self.get_piece(row + x, col + y)
+                    new_pos_piece = self.get_piece(row + (x * 2), col + (y * 2))
+
+                    # if jumpover_piece exists and is not Cannon
+                    if jumpover_piece != "--" and jumpover_piece != "C":
+
+                        # if new_pos space is empty, valid
+                        if new_pos_piece == "--":
+                            valid_directions.append((x * 2, y * 2))
+
+                        # if new_pos space is occupied by opponent non-Cannon piece, valid
+                        elif new_pos_piece[0] == self.get_opponent() and new_pos_piece[1] != "C":
+                            valid_directions.append((x * 2, y * 2))
+
+        # add all possible moves to poss_moves_index
+        self.save_moves(valid_directions)
+        return self._poss_moves_index
+
+    def general_and_guard_moves(self):
+        """
+        Returns all possible moves for General and Guard pieces.
+        """
+        row = self._curr_pos_index[0]  # first value represents row
+        col = self._curr_pos_index[1]  # second value represents column
+
+        #
+        if self.get_active_player() == "b":
+            # positions that allow diagonal movement in palace
+            diag_positions = [(7, 3), (9, 3), (7, 5), (9, 5), (8, 4)]
+            # positions that only allow linear movement in palace
+            linear_positions = [(8, 3), (8, 5), (7, 4), (9, 4)]
+        else:
+            diag_positions = [(0, 3), (2, 3), (0, 5), (2, 5), (1, 4)]
+            linear_positions = [(1, 3), (1, 5), (0, 4), (2, 4)]
+
+        if (row, col) in diag_positions:
+            poss_directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
+        else:
+            poss_directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+
+        # pieces CANNOT leave the palace
+        palace_spaces = diag_positions + linear_positions
+        for (x, y) in poss_directions:
+            if self.check_range(row + x, col + y):
+                if (row + x, col + y) not in palace_spaces:
+                    poss_directions.remove((x, y))
+
+        # add all possible moves to poss_moves_index
+        self.save_moves(poss_directions)
+        return self._poss_moves_index
+
+    def is_in_check(self, player):
+        """
+        Checks if active_player is in check (TRUE) or not (FALSE)
+        """
         pass
 
-    def general_moves(self):
+    def is_check(self):
+        """
+        Generates all possible moves of all active_player pieces
+        Checks if opponent's General is threatened/could be taken on active_player's next move
+        """
         pass
+
+    def is_checkmate(self):
+        """
+        Assumes checkmate is true, tries to find escape route
+        FIRST: Checks if General can move out of check or take the threat_piece
+        SECOND: Checks if any other active_player pieces can take the threat_piece
+        THIRD: Checks if any other active_player pieces can block the path of the threat_piece
+        """
+        pass
+
+    def check_block(self, row, col):
+        """
+        Checks if any active_player non-General pieces can block the path of the threat_piece
+        """
+        pass
+        # if threat_piece = horse...
+        # if threat_piece = elephant... etc
+
+
+    def is_self_check(self):
+        """
+        Checks if active_player makes a move that puts themselves in check
+        Checks if active_player is in check and makes a move that leaves active_player in check
+        """
+        pass
+        #  will also have to add to make_move to account for this
 
 
 def main():
@@ -408,6 +566,7 @@ def main():
     ]
 
     print(filled_board[0][1])
+
 
 if __name__ == "__main__":
     main()
