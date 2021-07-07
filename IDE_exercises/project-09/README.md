@@ -9,7 +9,7 @@ Unlike chess, Janggi allows you to pass a turn and thus there is no stalemate (a
 
 Your program should have Blue and Red as the competing players and Blue as the starting player. You do not need to implement any special mechanism for figuring out who can start the game. 
 
-Locations on the board will be specified using "algebraic notation", with columns labeled a-i and rows labeled 1-10, with row 1 being the Red side and row 10 the Blue side. Your initial board setup should have the Elephant transposed with the Horse, on the right side, as seen on the image from Wikipedia. You can use [this spreadsheet](https://docs.google.com/spreadsheets/d/1Lfl4IaSGqQaBYZmoD2wOrTVkXS2E7BP9v6N4p5sDPgM/edit?usp=sharing) as a reference to understand the initial board layout as well as to simulate your moves.
+Locations on the board will be specified using "algebraic notation", with columns labeled a-i and rows labeled 1-10, with row 1 being the Red side and row 10 the Blue side. Your initial board setup should have the Elephant transposed with the Horse, on the right side, as seen on the image from Wikipedia. You can use [this spreadsheet](https://docs.google.com/spreadsheets/d/1FlHmBBCiGAnj-uicEQihyFwCQ8j55T6pN4HIe6pFt-Q/edit?usp=sharing) as a reference to understand the initial board layout as well as to simulate your moves.
 
 You're not required to print the board, but you will probably find it very useful for testing purposes.
 
