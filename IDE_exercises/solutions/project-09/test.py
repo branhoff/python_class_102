@@ -4,31 +4,27 @@
 
 import unittest
 from janggigame import JanggiGame
+from gamepiece import GamePiece
 
 class JanggiGameTester(unittest.TestCase):
     """
-    unit tests for JanggiGame.py
+    unit tests for janggigame.py
     """
 
     def test_initialization(self):
         """
-        tests thte basic functionality of the Product class
+        tests thte basic functionality of the JanggiGame class
         """
         game = JanggiGame()
-
         self.assertEqual(game.get_player_turn(), "BLUE")
+        self.assertEqual(game.get_game_state(), "UNFINISHED")
 
-    def test_get_color(self):
+    def test_initial_board(self):
         """
         """
         pass
 
-    def test_get_game_state(self):
-        """
-        """
-        pass
-
-    def test_soldier_moves(self):
+    def test_piece_functionality(self):
         """
         """
         game = JanggiGame()
@@ -37,10 +33,33 @@ class JanggiGameTester(unittest.TestCase):
         self.assertEqual(piece_name, "Soldier")
         piece_color = piece_object.get_color()
         self.assertEqual(piece_color, "BLUE")
+
+
+    def test_soldier_moves(self):
+        """
+        """
+        game = JanggiGame()
         self.assertEqual(game.make_move("A7", "A6"), True)
 
+    def test_soldier_moves(self):
+        """
+        """
+        game = JanggiGame()
+        self.assertEqual(game.make_move("A7", "A8"), False)
 
+class GamePieceTester(unittest.TestCase):
+    """
+    unit tests for gamepiece.py
+    """
 
+    def test_diagonal_generator_test(self):
+        """
+
+        """
+        gp = GamePiece("BLUE")
+        moves = gp.get_diagonal_moves((4,4))
+        print(list(moves))
+        
 
 if __name__ == '__main__':
     unittest.main()
