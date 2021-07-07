@@ -45,6 +45,7 @@ class JanggiGame():
         """
         return self._player_turn
 
+
     def get_piece(self, alg_coord):
         
         x, y = self._algebraic_notation_converter(alg_coord)
@@ -179,8 +180,6 @@ class JanggiGame():
         
         except TypeError:
             return False
-
-        board_copy = self._board.get_board()
 
         if self.get_game_state() != "UNFINISHED":
             return False
