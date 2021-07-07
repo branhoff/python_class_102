@@ -41,6 +41,32 @@ class GamePiece:
         """
         return self._piece_type
 
+    def get_diagonal_moves(self, position):
+        """
+        
+        """
+        return self._diagonal_generator(position)
+
+    def _diagonal_generator(self, position):
+        """[summary]
+
+        Args:
+            position (tuple): [description]
+
+        Returns:
+            list: array of tuples with x,y matrix coordinates
+        """
+        x,y = position
+        deltas = (-1, 1)
+        x_positions = [x + i for i in deltas if -1 < x + i < 9]
+        y_positions = [y + i for i in deltas if -1 < y + i < 10]
+
+        #print(list(x_positions))
+        #print(list(y_positions))
+
+        for x_pos in x_positions:
+            for y_pos in y_positions:
+                yield x_pos, y_pos
 
 class General(GamePiece):
     """
@@ -168,6 +194,7 @@ class Chariot(GamePiece):
             for row in range(y_from + y_step, y_to, y_step):
                 if game_game_game_board[col][row] != "":
                     return False
+
         if y_from == y_to:
             row = y_from
             for col in range(x_from + x_step, x_to, x_step):
