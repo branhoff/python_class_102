@@ -53,9 +53,6 @@ class JanggiGame:
             ["bc", "be", "bh", "bg", "--", "bg", "be", "bh", "bc"]
         ]
 
-    def board_translator(self):
-        pass
-
     def check_range(self, row, col):
         """
         Checks if given space is on the board
@@ -68,10 +65,10 @@ class JanggiGame:
         """
         Prints out the board key
         """
-        print("This is the board key")
+        print("This is the board key:")
         for x in self._board_key:
             for i in range(0, 9):
-                print(x[i], end=" ")
+                print(x[i], end = " ")
             print()
 
     def get_board(self):
@@ -81,7 +78,7 @@ class JanggiGame:
         print("This is the Janggi board:")
         for x in self._filled_board:
             for i in range(0, 9):
-                print(x[i], end="  ")
+                print(x[i], end = "  ")
             print()
 
     def get_game_state(self):
@@ -96,10 +93,10 @@ class JanggiGame:
         """
         if self.get_active_player() == "b":
             self._game_state = "RED_WON"
-            print("RED has won the game")
+            print("RED has won the game!")
         else:
             self._game_state = "BLUE_WON"
-            print("BLUE has won the game")
+            print("BLUE has won the game!")
 
     def get_active_player(self):
         """
@@ -165,7 +162,6 @@ class JanggiGame:
                 return False
 
             # if the player tries to place a piece on top of another piece
-            # COME BACK TO THIS for TAKING PIECES
             if new_pos_piece != "--" and new_pos_piece[0] != self.get_opponent():
                 print("ERROR! Cannot place a piece on top of another piece")
                 return False
@@ -187,14 +183,12 @@ class JanggiGame:
                 temp_check = self._check
                 self.is_check()
 
-                # check if move puts/leaves General in check
+                # check if move puts/leaves active_player's General in check
                 if self.is_self_check() is True:
                     self._filled_board = copied_board
                     self._check = temp_check
                     print("ERROR! Move puts active_player in check")
                     return False
-
-                # self._turn_count += 1
 
                 # if check, check if checkmate
                 if self._check == self.get_opponent():
@@ -227,13 +221,13 @@ class JanggiGame:
         elif piece_indicator == "e":
             self.elephant_moves()
             return self._poss_moves_index
-        if piece_indicator == "c":
+        elif piece_indicator == "c":
             self.chariot_moves()
             return self._poss_moves_index
-        if piece_indicator == "C":
+        elif piece_indicator == "C":
             self.cannon_moves()
             return self._poss_moves_index
-        if piece_indicator == "g" or "G":
+        elif piece_indicator == "g" or "G":
             self.general_and_guard_moves()
             return self._poss_moves_index
 
@@ -613,7 +607,7 @@ class JanggiGame:
         # reset taken_pieces list
         self._taken_pieces = ["--"]
 
-        # goes through entire board, checks in any active_player pieces can take the threat_piece
+        # goes through entire board, checks if any active_player pieces can take the threat_piece
         for x in range(0, 10):
             for y in range(0, 9):
                 if self.get_piece(x, y)[0] == self.get_active_player():
@@ -636,7 +630,7 @@ class JanggiGame:
             if self.check_block(row, col):      # passing in General's location
                 self._checkmate = False
 
-        # if checkmate is STILL True, it must be checkmate
+        # if checkmate is STILL True, it MUST be checkmate
         if self._checkmate:
             self.set_game_state()
 
