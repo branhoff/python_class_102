@@ -46,17 +46,16 @@ class Board:
         """
         return self._num_row
 
+    def get_board(self):
+        """
+        """
+        return self._board
+        
     def get_general_coordinates(self, color):
         """
         returns The corresponding player (by color's) current General Coordinates
         """
         return self._general_positions[color]
-
-    def get_board(self):
-        """
-        returns board list of lists
-        """
-        return self._board
 
     def get_palace(self, player_color):
         """
