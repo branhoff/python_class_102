@@ -220,6 +220,139 @@ class TestingJanggi(unittest.TestCase):
         game.make_move("d9", "e9")
         game.get_board()
 
+    def testing_is_check(self):
+        game = JanggiGame()
+        game.get_board()
+        # testing with Chariot threat_piece
+        game.make_move("a7", "b7")  # moving Soldier out of the way for testing purposes
+        game.make_move("c1", "c1")  # RED pass
+        game.get_board()
+        game.make_move("a10", "a6")
+        game.make_move("e4", "d4")
+        game.get_board()
+        game.make_move("a6", "e6")
+        game.get_board()
+        actual = game.is_in_check()
+        expected = True
+        self.assertEqual(actual, expected)
+
+    def testing_is_checkmate(self):
+        game = JanggiGame()
+        game.get_board()
+        # removing all red pieces but red General
+        game.remove_piece(0, 0)
+        game.remove_piece(0, 1)
+        game.remove_piece(0, 2)
+        game.remove_piece(0, 3)
+        game.remove_piece(0, 5)
+        game.remove_piece(0, 6)
+        game.remove_piece(0, 7)
+        game.remove_piece(0, 8)
+        game.remove_piece(2, 1)
+        game.remove_piece(2, 7)
+        game.remove_piece(3, 0)
+        game.remove_piece(3, 2)
+        game.remove_piece(3, 4)
+        game.remove_piece(3, 6)
+        game.remove_piece(3, 8)
+        game.get_board()
+        # removing all blue pieces except blue General, one guard, and blue Cannons
+        game.remove_piece(9, 0)
+        game.remove_piece(9, 1)
+        game.remove_piece(9, 2)
+        game.remove_piece(9, 5)
+        game.remove_piece(9, 6)
+        game.remove_piece(9, 7)
+        game.remove_piece(9, 8)
+        game.remove_piece(6, 0)
+        game.remove_piece(6, 2)
+        game.remove_piece(6, 4)
+        game.remove_piece(6, 6)
+        game.remove_piece(6, 8)
+        game.get_board()
+        # setting up checkmate
+        game.make_move("d10", "d9")
+        game.make_move("c1", "c1")      # RED pass
+        game.make_move("d9", "d8")
+        game.make_move("c1", "c1")      # RED pass
+        game.get_board()
+        game.make_move("b8", "g8")
+        game.make_move("c1", "c1")      # RED pass
+        game.make_move("d8", "e8")
+        game.make_move("c1", "c1")      # RED pass
+        game.make_move("g8", "d8")
+        game.make_move("c1", "c1")      # RED pass
+        game.get_board()
+        game.make_move("e8", "f8")
+        game.make_move("c1", "c1")      # RED pass
+        game.make_move("h8", "e8")
+        game.make_move("c1", "c1")      # RED pass
+        game.make_move("f8", "f9")
+        game.make_move("c1", "c1")      # RED pass
+        game.make_move("f9", "f10")
+        game.make_move("c1", "c1")      # RED pass
+        game.make_move("f10", "e10")
+        game.make_move("c1", "c1")      # RED pass
+        game.make_move("e10", "d10")
+        game.make_move("c1", "c1")      # RED pass
+        game.make_move("d10", "d9")
+        game.make_move("c1", "c1")      # RED pass
+        game.make_move("e8", "e10")
+        game.make_move("e2", "d2")      # RED moves General out of check (one space to the left)
+        game.get_board()
+        # FINAL MOVE, should be CHECKMATE
+        game.make_move("d8", "d10")
+        game.get_board()
+        actual = game._checkmate
+        expected = True
+        self.assertEqual(actual, expected)
+
+    def testing_check_block(self):
+        game = JanggiGame()
+        game.get_board()
+        # testing with Chariot threat_piece
+        game.make_move("a7", "b7")  # moving Soldier out of the way for testing purposes
+        game.make_move("c1", "c1")  # RED pass
+        game.get_board()
+        game.make_move("a10", "a6")
+        game.make_move("e4", "d4")
+        game.get_board()
+        game.make_move("a6", "e6")
+        game.get_board()
+        actual = game.check_block(1, 4)
+        expected = True
+        self.assertEqual(actual, expected)
+
+    def testing_is_self_check(self):
+        game = JanggiGame()
+        game.get_board()
+        # testing with Chariot
+        game.make_move("a7", "b7")  # moving Soldier out of the way for testing purposes
+        game.make_move("c1", "c1")  # RED pass
+        game.get_board()
+        game.make_move("a10", "a6")
+        game.make_move("c1", "c1")  # RED pass
+        game.get_board()
+        game.make_move("a6", "e6")
+        game.make_move("e4", "f4")
+        # testing with Horse
+        game.make_move("c1", "c1")  # RED pass
+        game.make_move("e6", "a6")
+        game.get_board()
+        game.make_move("d1", "d2")
+        game.make_move("c10", "d8")
+        game.make_move("d2", "d3")
+        game.make_move("d8", "e6")
+        game.get_board()
+        game.make_move("c1", "c1")  # RED pass
+        game.make_move("e6", "d4")
+        game.get_board()
+        game.make_move("d3", "d2")
+
+
+
+
+
 
 if __name__ == "__main__":
     unittest.main()

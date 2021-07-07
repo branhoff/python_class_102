@@ -96,8 +96,10 @@ class JanggiGame:
         """
         if self.get_active_player() == "b":
             self._game_state = "RED_WON"
+            print("RED has won the game")
         else:
             self._game_state = "BLUE_WON"
+            print("BLUE has won the game")
 
     def get_active_player(self):
         """
@@ -129,6 +131,8 @@ class JanggiGame:
         """
         curr_pos_piece = None
         new_pos_piece = None
+
+        self._check = False
 
         # if the player wants to pass their turn
         if curr_pos == new_pos:
@@ -179,6 +183,26 @@ class JanggiGame:
                 self._filled_board[i][j] = "--"
                 self._filled_board[x][y] = curr_pos_piece
 
+                # check if opponent in check
+                temp_check = self._check
+                self.is_check()
+
+                # check if move puts/leaves General in check
+                if self.is_self_check() is True:
+                    self._filled_board = copied_board
+                    self._check = temp_check
+                    print("ERROR! Move puts active_player in check")
+                    return False
+
+                # self._turn_count += 1
+
+                # if check, check if checkmate
+                if self._check == self.get_opponent():
+                    # save threat_piece to use in is_checkmate
+                    self._threat_piece = self._filled_board[x][y]
+                    self._threat_piece_index = [x, y]
+                    self.is_checkmate()
+
                 self._turn_count += 1
 
                 return True
@@ -216,7 +240,7 @@ class JanggiGame:
     def save_moves(self, poss_directions):
         """
         Saves all possible moves for each piece's indiv move functions.
-        Also saves captured pieces.
+        Also saves taken pieces.
         """
         row = self._curr_pos_index[0]  # first value represents row
         col = self._curr_pos_index[1]  # second value represents column
@@ -506,44 +530,251 @@ class JanggiGame:
         self.save_moves(poss_directions)
         return self._poss_moves_index
 
-    def is_in_check(self, player):
-        """
-        Checks if active_player is in check (TRUE) or not (FALSE)
-        """
-        pass
-
     def is_check(self):
         """
         Generates all possible moves of all active_player pieces
         Checks if opponent's General is threatened/could be taken on active_player's next move
         """
-        pass
+        # reset taken_pieces list
+        self._taken_pieces = ["--"]
+
+        # goes through entire board, checking all possible moves for all active_player pieces
+        for i in range(0, 10):
+            for j in range(0, 9):
+                if self._filled_board[i][j][0] == self.get_active_player():
+                    piece_indicator = self._filled_board[i][j][1]
+
+                    # save piece's index, gets all possible moves of specific piece
+                    temp_index = self._curr_pos_index
+                    self._curr_pos_index = [i, j]
+                    self.get_all_moves(piece_indicator)
+                    self._curr_pos_index = temp_index
+
+                    # if opp_general can be taken by any active_player piece, opponent in check!
+                    for x in range(len(self._taken_pieces)):
+                        if self._taken_pieces[x][0] == self.get_opponent() and self._taken_pieces[x][1] == "G":
+                            self._check = self.get_opponent()
 
     def is_checkmate(self):
         """
         Assumes checkmate is true, tries to find escape route
         FIRST: Checks if General can move out of check or take the threat_piece
-        SECOND: Checks if any other active_player pieces can take the threat_piece
-        THIRD: Checks if any other active_player pieces can block the path of the threat_piece
+        SECOND: Checks if any active_player pieces can take the threat_piece
+        THIRD: Checks if any active_player pieces can block the path of the threat_piece
         """
-        pass
+        # assumes checkmate is true
+        self._checkmate = True
+
+        # gets General's position
+        general = None
+        for i in range(1, 10):
+            for j in range(1, 9):
+                if self._filled_board[i][j] == self.get_active_player() + "G":
+                    general = self._filled_board[i][j]
+                    self._curr_pos_index = [i, j]
+                    break
+                j += 1
+            i += 1
+
+        row = self._curr_pos_index[0]       # first value represents row
+        col = self._curr_pos_index[1]       # second value represents col
+
+        # FIRST --- checks if General can move out of check or take the threat_piece
+
+        # gets all possible moves of the General
+        self.get_all_moves("G")
+
+        # save current board in case moving the General does not resolve check
+        copied_board = copy.deepcopy(self._filled_board)
+
+        # tries all possible General moves
+        for (x, y) in self._poss_moves_index:
+            self._filled_board[x][y] = general
+            self._filled_board[row][col] = "--"
+
+            # checks if still check; if no longer check, not checkmate
+            # switches active_player for is_check test
+            self._turn_count += 1
+            temp_check = self._check
+            self._check = False
+            # calls is_check to see if still check or not
+            self.is_check()
+            if self.is_check() is False:
+                self._checkmate = False
+            self._check = temp_check
+            # switches active_player back
+            self._turn_count -= 1
+
+        # reverts the board to how it was before moving General
+        self._filled_board = copied_board
+
+        # SECOND --- checks if any active_player pieces can take the threat_piece
+
+        # reset taken_pieces list
+        self._taken_pieces = ["--"]
+
+        # goes through entire board, checks in any active_player pieces can take the threat_piece
+        for x in range(0, 10):
+            for y in range(0, 9):
+                if self.get_piece(x, y)[0] == self.get_active_player():
+                    piece_indicator = self._filled_board[x][y][1]
+
+                    self._curr_pos_index = [x, y]
+                    self.get_all_moves(piece_indicator)
+
+                    # if threat_piece can be taken, not checkmate
+                    for i in range(len(self._taken_pieces)):
+                        if self._taken_pieces[i] == self._threat_piece:
+                            self._checkmate = False
+                            break
+                            # if not, loop continues
+
+        # THIRD --- checks if any active_player pieces can block the path of the threat_piece
+
+        # if checkmate status is still True, calls check_block
+        if self._checkmate:
+            if self.check_block(row, col):      # passing in General's location
+                self._checkmate = False
+
+        # if checkmate is STILL True, it must be checkmate
+        if self._checkmate:
+            self.set_game_state()
 
     def check_block(self, row, col):
         """
         Checks if any active_player non-General pieces can block the path of the threat_piece
         """
-        pass
-        # if threat_piece = horse...
-        # if threat_piece = elephant... etc
+        check_path = []
+        # General's row and col
+        G_row = row
+        G_col = col
+        # threat_piece's row and col
+        threat_row = self._threat_piece_index[0]
+        threat_col = self._threat_piece_index[1]
 
+        # if threat_piece is Horse
+        if self._threat_piece[1] == "h":
+            # get the spaces on the path from the threat_piece to the General
+            # vertical move
+            if abs(threat_row - G_row) > abs(threat_col - G_col):
+                # one space in front/behind
+                check_path.append((threat_row - int((threat_row - G_row) / 2), threat_col))
+            # horizontal move
+            else:
+                # one space L or R
+                check_path.append((threat_row, threat_col - int((threat_col - G_col) / 2)))
+
+        # if threat_piece is Elephant
+        if self._threat_piece[1] == "e":
+            # get the spaces on the path from the threat_piece to the General
+            # vertical move
+            if abs(threat_row - G_row) > abs(threat_col - G_col):
+                # one space in front/behind
+                check_path.append((threat_row - int((threat_row - G_row) / 3), threat_col))
+                # one space diag L or R
+                check_path.append((threat_row - int((threat_row - G_row) * 2 / 3),
+                                   threat_col - int((threat_col - G_col) / 2)))
+            # horizontal move
+            else:
+                # one space L or R
+                check_path.append((threat_row, threat_col - int((threat_col - G_col) / 3)))
+                # one space diag up/down
+                check_path.append((threat_row - int((threat_row - G_row) / 2),
+                                   threat_col - int((threat_col - G_col) * 2 / 3)))
+
+        # if threat_piece is Chariot or Cannon
+        if self._threat_piece[1] == "c" or self._threat_piece[1] == "C":
+            # get the spaces on the path from the threat_piece to the General
+            # vertical move
+            if threat_col == G_col:
+                # checks if going forwards or backwards
+                direction = (threat_row - G_row) / (abs(threat_row - G_row))
+
+                for i in range(abs(threat_row - G_row)):
+                    space_occupant = self.get_piece(int(threat_row - direction * (i + 1)), G_col)
+                    if space_occupant == "--":
+                        check_path.append((int(threat_row - direction * (i + 1)), G_col))
+            # horizontal move
+            if threat_row == G_row:
+                # checks if going left or right
+                direction = (threat_col - G_col) / (abs(threat_col - G_col))
+
+                for i in range(abs(threat_col - G_col)):
+                    space_occupant = self.get_piece(G_row, int(threat_col - direction * (i + 1)))
+                    if space_occupant == "--":
+                        check_path.append(G_row, int(threat_col - direction * (i + 1)))
+
+        # goes through entire board, checks in any active_player pieces can block the check_path
+        for x in range(0, 10):
+            for y in range(0, 9):
+                space_occupant = self.get_piece(x, y)
+
+                # checks if any active_player pieces (except the General) can block the check_path
+                if space_occupant[0] == self.get_active_player() and space_occupant[1] != "G":
+                    piece_indicator = space_occupant[1]
+
+                    # save piece's index, gets all possible moves of specific piece
+                    temp_index = self._curr_pos_index
+                    self._curr_pos_index = [x, y]
+                    self.get_all_moves(piece_indicator)
+                    self._curr_pos_index = temp_index
+
+                    # returns True if the specific piece can block the check_path
+                    for position in check_path:
+                        if position in self._poss_moves_index:
+                            return True
 
     def is_self_check(self):
         """
         Checks if active_player makes a move that puts themselves in check
         Checks if active_player is in check and makes a move that leaves active_player in check
         """
-        pass
-        #  will also have to add to make_move to account for this
+        # reset taken_pieces list
+        self._taken_pieces = ["--"]
+
+        # goes through entire board, checking all possible moves for all active_player pieces
+        for i in range(0, 10):
+            for j in range(0, 9):
+                if self._filled_board[i][j][0] == self.get_opponent():
+                    piece_indicator = self._filled_board[i][j][1]
+
+                    # saves piece's index, gets all possible moves of specific piece
+                    # switches active_player to check if opponent checks active_player
+                    self._turn_count += 1
+                    temp_index = self._curr_pos_index
+                    self._curr_pos_index = [i, j]
+                    self.get_all_moves(piece_indicator)
+                    self._curr_pos_index = temp_index
+                    # switches active_player back
+                    self._turn_count -= 1
+
+                    # if General is taken, the move puts/leaves active_player's General in check
+                    # move considered INVALID
+                    for x in range(len(self._taken_pieces)):
+                        if self._taken_pieces[x][0] == self.get_active_player() and self._taken_pieces[x][1] == "G":
+                            return True
+        return False
+
+    def is_in_check(self):
+        """
+        Returns T or F to see if player is_in_check or not for testing purposes
+        """
+        if self._check == "b" and self.get_active_player() == "b":
+            return True
+        elif self._check == "r" and self.get_active_player() == "r":
+            return True
+        return False
+
+    def remove_piece(self, row, col):
+        """
+        Removes pieces from the board for testing purposes
+        """
+        space_occupant = self.get_piece(row, col)
+        if space_occupant != "--":
+            self._filled_board[row][col] = "--"
+        else:
+            print("ERROR removing piece")
+            return False
 
 
 def main():
