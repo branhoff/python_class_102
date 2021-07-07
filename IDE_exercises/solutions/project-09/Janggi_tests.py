@@ -13,11 +13,11 @@ class TestingJanggi(unittest.TestCase):
         expected = True
         self.assertEqual(actual, expected)
 
-        actual2 = game.check_range(0, 10)
+        actual2 = game.check_range(0, 9)
         expected2 = False
         self.assertEqual(actual2, expected2)
 
-        actual3 = game.check_range(9, 1)
+        actual3 = game.check_range(10, 1)
         expected3 = False
         self.assertEqual(actual3, expected3)
 
@@ -348,10 +348,6 @@ class TestingJanggi(unittest.TestCase):
         game.make_move("e6", "d4")
         game.get_board()
         game.make_move("d3", "d2")
-
-
-
-
 
 
 if __name__ == "__main__":

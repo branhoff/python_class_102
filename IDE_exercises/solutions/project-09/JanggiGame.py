@@ -702,7 +702,7 @@ class JanggiGame:
                 for i in range(abs(threat_col - G_col)):
                     space_occupant = self.get_piece(G_row, int(threat_col - direction * (i + 1)))
                     if space_occupant == "--":
-                        check_path.append(G_row, int(threat_col - direction * (i + 1)))
+                        check_path.append((G_row, int(threat_col - direction * (i + 1))))
 
         # goes through entire board, checks in any active_player pieces can block the check_path
         for x in range(0, 10):
