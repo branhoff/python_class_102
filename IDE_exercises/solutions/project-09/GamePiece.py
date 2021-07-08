@@ -11,18 +11,7 @@ class GamePiece:
         """
         self._color = player_piece_color
         self._piece_type = self.__class__.__name__
-        self._diagonal_moves = {(0, 3): [(1, 4), (2, 5)],
-                                (0, 5): [(1, 4), (2, 3)],
-                                (1, 4): [(0, 3), (0, 5), (2, 3), (2, 5)],
-                                (2, 3): [(1, 4), (0, 5)],
-                                (2, 5): [(1, 4), (0, 3)],
-                            
-                                (7, 3): [(8, 4), (9, 5)],
-                                (7, 5): [(8, 4), (9, 3)],
-                                (8, 4): [(7, 3), (7, 5), (9, 3), (9, 5)],
-                                (9, 3): [(8, 4), (7, 5)],
-                                (9, 5): [(8, 4), (7, 3)]}
-
+        
     def __str__(self):
         """
         Dunder method to allow for class string representation for testing purposes
