@@ -59,6 +59,12 @@ class GamePieceTester(unittest.TestCase):
         gp = GamePiece("BLUE")
         moves = gp.get_diagonal_moves((4,4))
         print(list(moves))
+
+        moves = gp.get_diagonal_moves((0,0))
+        print(list(moves))
+
+        moves = gp.get_diagonal_moves((9,10))
+        print(list(moves))
         
 
 if __name__ == '__main__':
