@@ -20,3 +20,4 @@ Please consider adding a README outlining a problem and also providing a corresp
 - [ ] Add visualization link for project 04d to README
 - [ ] Add unittests to project-09 (missing general moves or instance)
 - [ ] Check if you need to add json file ot 05c
+- [ ] Fix code smell in project-05b (`search_nobel()` for instance)
