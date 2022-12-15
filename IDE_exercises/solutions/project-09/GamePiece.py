@@ -70,7 +70,7 @@ class General(GamePiece):
         super().__init__(_color)
         self._moves = [(-1, -1), (-1, 0), (-1, 1),
                        (0, -1), (0, 0), (0, 1), 
-                       (1, 1), (1, 0), (1, -1), ]
+                       (1, 1), (1, 0), (1, -1)]
 
     def is_legal_move(self, x_from, y_from, x_to, y_to, game_board):
         """
@@ -78,8 +78,9 @@ class General(GamePiece):
         returns True if legal, False otherwise
         """
         if (x_to, y_to) in board.Board().get_palace(self.get_color()):
-            diff = (x_to - x_from, y_to - y_from)
-            return diff in self._moves
+            if (x_from, y_from) in board.Board().get_palace(self.get_color()):
+                diff = (x_to - x_from, y_to - y_from)
+                return diff in self._moves
         else:
             False
              

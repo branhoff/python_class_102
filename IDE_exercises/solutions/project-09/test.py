@@ -40,12 +40,16 @@ class JanggiGameTester(unittest.TestCase):
         """
         game = JanggiGame()
         self.assertEqual(game.make_move("A7", "A6"), True)
-
-    def test_soldier_moves(self):
-        """
-        """
+        
         game = JanggiGame()
         self.assertEqual(game.make_move("A7", "A8"), False)
+
+    def test_general_moves(self):
+        """
+        """
+        pass
+
+        
 
 class GamePieceTester(unittest.TestCase):
     """
@@ -58,13 +62,13 @@ class GamePieceTester(unittest.TestCase):
         """
         gp = GamePiece("BLUE")
         moves = gp.get_diagonal_moves((4,4))
-        print(list(moves))
+        self.assertTrue([(3,3), (3,5), (5,3), (5,5)], list(moves))
 
         moves = gp.get_diagonal_moves((0,0))
-        print(list(moves))
+
 
         moves = gp.get_diagonal_moves((9,10))
-        print(list(moves))
+
         
 
 if __name__ == '__main__':
