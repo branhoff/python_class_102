@@ -399,9 +399,5 @@ def main():
     print(p2_fine)
     lib.return_library_item("456")
 
-
-
-
-
 if __name__ == "__main__":
     main()
