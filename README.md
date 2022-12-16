@@ -17,6 +17,7 @@ Practice makes perfect. Effective practice problems dedicated to every learning 
 Please consider adding a README outlining a problem and also providing a corresponding .py file solution. Pleae also consider reviewing other solutions and adapting them to improve readability and good programming practice. Please remember that this is a programming principles course. Not a optimal list comprehension course... Let's focus on generally good, multi-language programming principles covered here.
 
 ## TODO:
+- [ ] Add exercises to `01-lessons/03`
 - [ ] Add visualization link for project 04d to README
 - [ ] Add unittests to project-09 (missing general moves or instance)
 - [ ] Check if you need to add json file ot 05c
