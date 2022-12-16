@@ -4,7 +4,7 @@ This project is a follow up to the python_class_101 course. It has a similar str
 
 Consists of two basic components:
 * Jupyter Notebooks outlining essential concepts in programming. These are stored in the "01-lesson_notebooks" directory.
-* Corresponding larger project exercises, intended to be built in an IDE (program assumes VS Code), is also included in the IDE_excecises folder. These are stored in the "IDE_exercises" directory.
+* Corresponding larger project exercises, intended to be built in an IDE (program primarily assumes VS Code), is also included in the `02-IDE_projects` folder. T
 
 ## How to use the materials
 Lesson notebooks are arranged by topic. Each notebook contains explanations and examples of the programming principles concept for that section. Basic exercies and solutions are also included and can be practiced in the notebook directly
@@ -17,6 +17,8 @@ Practice makes perfect. Effective practice problems dedicated to every learning 
 Please consider adding a README outlining a problem and also providing a corresponding .py file solution. Pleae also consider reviewing other solutions and adapting them to improve readability and good programming practice. Please remember that this is a programming principles course. Not a optimal list comprehension course... Let's focus on generally good, multi-language programming principles covered here.
 
 ## TODO:
-* [ ] Add visualization link for project 04d to README
-
-* [ ] Check if you need to add json file ot 05c
+- [ ] Add exercises to `01-lessons/03`
+- [ ] Add visualization link for project 04d to README
+- [ ] Add unittests to project-09 (missing general moves or instance)
+- [ ] Check if you need to add json file ot 05c
+- [ ] Fix code smell in project-05b (`search_nobel()` for instance)
